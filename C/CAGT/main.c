@@ -34,6 +34,7 @@ void floatBin(unsigned n) {
         mask = 1 << i;
         bins[i] = (mask & n) >> i;
     }
+    printf("binary float = \n");
     print_table(bins);
 }
 
@@ -55,11 +56,14 @@ int main() {
     unsigned int num_int;
     printf("int: ");
     scanf("%i", &num_int);
+
     union float_union num;
     printf("float: ");
     scanf("%f", &num.fn);
+
     intBin(num_int);
     printf("\n");
     floatBin(num.un);
+
     return 0;
 }
