@@ -10,7 +10,7 @@ union float_union {
 
 void print_repeat(char a, int i) {
     for (int j = 0; j < i; j++) {
-        printf(&a);
+        printf("%c", a);
     }
 }
 
@@ -25,6 +25,14 @@ void print_table(int* bins) {
     for (int i = 22; i >= 0; i--) {
         printf("%i", bins[i]);
     }
+    printf("\n");
+    // int mantissa10 = 0;
+    // for (int i = 22; i >= 0; i--) {
+    //     if (bins[i] == 1) {
+    //         mantissa10 += 1 << i;
+    //     }
+    // }
+    // printf("\n%i", mantissa10);
 }
 
 void floatBin(unsigned n) {
@@ -36,6 +44,24 @@ void floatBin(unsigned n) {
     }
     printf("binary float = \n");
     print_table(bins);
+    int chara = (int)(n << 1 >> 24);
+    unsigned int mant = (int)(n << 9 >> 9);
+    mant += 1 << 23;
+    int por = chara - 127;
+    int dot = 23 - por;
+    int int_of_float = mant >> dot;
+    float float_of_float = 0;
+    float one = 1;
+    for (int i = dot; i > 0; i--) {
+        one /= 2;
+        // printf(" %f %f", one, float_of_float);
+        if (mant << (32 - i) >> 31) {
+            float_of_float += one;
+        }
+    }
+
+    printf("\n%i", int_of_float);
+    printf(" %f", float_of_float);
 }
 
 void intBin(unsigned n) {
