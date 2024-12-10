@@ -1,19 +1,12 @@
 ﻿#include <iostream>
 #include <SDL2/SDL.h>
-// #include <windows.h>
-// #include <windowsx.h>
-
 using namespace std;
 
 void getCoords(int& x, int& y, int& xDot, int& yDot) {
-	// cin >> x;
-	// cin >> y;
-	// cin >> xDot;
-	// cin >> yDot;
-	x = 10;
-	y = 8;
-	xDot = 6;
-	yDot = 3;
+	cin >> x;
+	cin >> y;
+	cin >> xDot;
+	cin >> yDot;
 }
 
 void tableGen(SDL_Renderer* ren, int x, int y) {
