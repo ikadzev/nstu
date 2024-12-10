@@ -13,6 +13,7 @@
 typedef std::multimap<int,int>	Info;
 typedef std::map<char, Info> TextInfo;
 TextInfo readTextInfo(char*);
-Info findInfo(TextInfo, char, int);
+void printInfo(TextInfo& ti, const char* fn, const char ch, const int nm);
+void printLine(const char* fn, const int ln);
 
 #endif //MAIN_H

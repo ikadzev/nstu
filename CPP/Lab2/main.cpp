@@ -13,7 +13,7 @@
 
 Вариант 10.
 
-typedef std::multimap<int,int>	Info;
+typedef std::multimap<int[длина],int[позиция]>	Info;
 std::map< char, Info> TextInfo;
 
 Проиндексировать входной текстовый файл, собирая информацию в указанную структуру данных
@@ -26,7 +26,7 @@ std::map< char, Info> TextInfo;
 
 #include "main.h"
 
-int main(int argc, char *argv[]) {
+int main(const int argc, char *argv[]) {
     if (argc != 4) {
         std::cout << "Usage: ./main <filename> <char> <length>\n" << std::endl;
         return 1;
@@ -38,9 +38,9 @@ int main(int argc, char *argv[]) {
         std::cout << e.what() << std::endl;
         return 2;
     }
-    char inChar = argv[1][0];
-    int length = atoi(argv[3]);
-    Info outInfo = findInfo(ti, inChar, length);
+    const char inChar = argv[2][0];
+    const int length = atoi(argv[3]);
+    printInfo(ti, argv[1], inChar, length);
     
 }
 
@@ -53,16 +53,27 @@ TextInfo readTextInfo(char* filename) {
     TextInfo ti;
     std::string current;
     while (std::getline(f, current)) {
-        // Info tInfo;
-        // tInfo.insert({++linesCount, current.length()});
-        ti[current[0]].insert({++linesCount, current.length()});
+        ti[current[0]].insert({static_cast<int>(current.length()), ++linesCount});
     }
     return ti;
 }
 
-Info findInfo(TextInfo ti, char inChar, int length) {
-    Info outInfo;
-    for (auto inf : ti[inChar]) {
-        if (inf.second() == length) { outInfo.insert(inf); }
+void printInfo(TextInfo& ti, const char* fn, const char ch, const int nm) {
+    Info in_info = ti[ch];
+    const auto rg = in_info.equal_range(nm);
+    for (auto it = rg.first; it != rg.second; ++it) {
+        const int li = it->second;
+        printLine(fn, li);
     }
+}
+
+void printLine(const char* fn, const int ln) {
+    std::ifstream fo(fn);
+    std::string buff;
+    for (int cnt = 0; cnt < ln - 1; cnt++) {
+        std::getline(fo, buff);
+    }
+    buff.clear();
+    std::getline(fo, buff);
+    std::cout << ln << "::" << buff << std::endl;
 }
