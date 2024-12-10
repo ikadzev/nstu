@@ -1,159 +1,175 @@
 ﻿#include <iostream>
-#include <windows.h>
-#include <windowsx.h>
+#include <SDL2/SDL.h>
 using namespace std;
 
 constexpr auto CELL_SIZE = 30;
+constexpr int SCREEN_wIGTH = 1920;
+constexpr int SCREEN_HEIGHT = 1200;
 
-void getCoords(int& x, int& y, int& xDot1, int& yDot1, int& xDot2, int& yDot2) {
+typedef struct TableInfo {
+	int squareSize;
+	int xTable;
+	int yTable;
+	int xDot1;
+	int yDot1;
+	int xDot2;
+	int yDot2;
+	int xShift;
+	int yShift;
+} TableInfo;
+
+void writeRect(SDL_Renderer*, const TableInfo, int, int);
+
+void getCoords(TableInfo& ti) {
 	/*cout << "Grid (x, y):" << endl;
-	cin >> x;
-	cin >> y;
+	cin >> ti.xTable;
+	cin >> ti.yTable;
 	cout << "First dot (x, y):" << endl;
-	cin >> xDot1;
-	cin >> yDot1;
+	cin >> ti.xDot1;
+	cin >> ti.yDot1;
 	cout << "Second dot (x, y):" << endl;
-	cin >> xDot2;
-	cin >> yDot2;*/
-	x = 10;
-	y = 10;
-	xDot1 = 1;
-	yDot1 = 2;
-	xDot2 = 9;
-	yDot2 = 9;
+	cin >> ti.xDot2;
+	cin >> ti.yDot2;*/
+	ti.squareSize = 20;
+	ti.xTable = 30;
+	ti.yTable = 30;
+	ti.xDot1 = 14;
+	ti.yDot1 = 3;
+	ti.xDot2 = 7;
+	ti.yDot2 = 27;
+	ti.xShift = ((SCREEN_wIGTH - ti.squareSize * ti.xTable) / 2);
+	ti.yShift = ((SCREEN_HEIGHT - ti.squareSize * ti.yTable) / 2);
 }
 
-void getConsole(HWND& hwnd, HDC& hdc) {
-	hwnd = GetConsoleWindow();
-	hdc = GetDC(hwnd);
-}
-
-void getBrushes(HBRUSH& blackBrush, HPEN& whitePen, HBRUSH& blueBrush) {
-	blackBrush = GetStockBrush(BLACK_BRUSH);
-	whitePen = GetStockPen(WHITE_PEN);
-	blueBrush = CreateSolidBrush(RGB(0, 0, 255));
-}
-
-void tableLines() {}
-
-void tableGen(HDC hdc, int x, int y) {
-	for (int i = 0; i <= x; i++) {
-		LineTo(hdc, i * CELL_SIZE, y * CELL_SIZE);
-		MoveToEx(hdc, (i + 1) * CELL_SIZE, 0, NULL);
-	}
-	MoveToEx(hdc, 0, 0, NULL);
-	for (int j = 0; j <= y; j++) {
-		LineTo(hdc, x * CELL_SIZE, j * CELL_SIZE);
-		MoveToEx(hdc, 0, (j + 1) * CELL_SIZE, NULL);
-	}
-}
-
-void writeRect(HDC hdc, int xDot, int yDot) {
-	int xDotCoord = (xDot - 1) * CELL_SIZE;
-	int yDotCoord = (yDot - 1) * CELL_SIZE;
-	Rectangle(hdc, xDotCoord, yDotCoord, xDotCoord + CELL_SIZE, yDotCoord + CELL_SIZE);
-}
-
-void initTable(HDC hdc, HBRUSH brush, HPEN pen) {
-	SelectBrush(hdc, brush);
-	FloodFill(hdc, 0, 0, RGB(0, 0, 1));
-	SelectPen(hdc, pen);
-	MoveToEx(hdc, 0, 0, NULL);
-}
-
-void endConsole(HWND hwnd, HDC hdc, HPEN pen) {
-	DeleteObject(pen);
-	ReleaseDC(hwnd, hdc);
-}
-
-void writeLineCDA(int xTable, int yTable, int xDot1, int yDot1, int xDot2, int yDot2, HDC hdc) {
+void writeLineCDA(const TableInfo ti, SDL_Renderer* ren) {
 	int length;
-	length = max(abs(xDot1 - xDot2), abs(yDot1 - yDot2));
+	length = max(abs(ti.xDot1 - ti.xDot2), abs(ti.yDot1 - ti.yDot2));
 
-	float dx = (float)(xDot2 - xDot1) / length;
-	float dy = (float)(yDot2 - yDot1) / length;
+	float dx = (float)(ti.xDot2 - ti.xDot1) / length;
+	float dy = (float)(ti.yDot2 - ti.yDot1) / length;
 
-	float x = xDot1;
-	float y = yDot1;
+	float x = ti.xDot1;
+	float y = ti.yDot1;
 	int i = 0;
 	while (i <= length) {
-		if ((x <= xTable) && (y <= yTable)) writeRect(hdc, x, round(yTable - y + 1));
+		if ((x <= ti.xTable) && (y <= ti.yTable)) writeRect(ren, ti, round(x), round(ti.yTable - y + 1));
 		x += dx;
 		y += dy;
 		i++;
 	}
 }
 
-void writeLineBresenham(int xTable, int yTable, int xDot1, int yDot1, int xDot2, int yDot2, HDC hdc) {
+void writeLineBresenham(const TableInfo ti, SDL_Renderer* ren) {
 	int dx, dy, ch = 0, i = 0, e, dx2, dy2;
-
-	xDot2 -= xDot1; 
-	dx = abs(xDot2);
-	yDot2 -= yDot1; 
-	dy = abs(yDot2);
-	if (!xDot2 && !yDot2) return;
-	if (xDot2) xDot2 = xDot2 < 0 ? -1 : 1;
-	if (yDot2) yDot2 = yDot2 < 0 ? -1 : 1;
+	int x = ti.xDot1, y = ti.yDot1;
+	
+	dx = abs(ti.xDot2 - ti.xDot1); 
+	
+	dy = abs(ti.yDot2 - ti.yDot1); 
+	if (!dx && !dy) return;
+	int sx, sy;
+	if (dx) sx = (ti.xDot2 - ti.xDot1) < 0 ? -1 : 1; 
+	if (dx) sy = (ti.yDot2 - ti.yDot1) < 0 ? -1 : 1; 
 
 	if (dy > dx) { 
 		int t = dy; dy = dx; dx = t; ch = 1; 
 	}
-	dx2 = dx << 1; 
+	dx2 = dx << 1;
 	dy2 = dy << 1;
-	e = dy2 - dx;
-	for (i = 0; i < dx; ++i) {
-		if ((xDot1 <= xTable) && (yDot1 <= yTable)) writeRect(hdc, xDot1, round(yTable - yDot1 + 1));
+	e = dy2 - dx; 
+	while ((x != ti.xDot2) && (y != ti.yDot2)) {
+		if ((x <= ti.xTable) && (y <= ti.yTable)) writeRect(ren, ti, x, ti.yTable - y + 1);
 		if (e > 0) { 
 			if (ch) {
-				xDot1 += xDot2;
+				x += sx;
 			}
 			else {
-				yDot1 += yDot2;
+ 				y += sy;
 			}
-			e -= dx2; 
+			e -= dx2;
 		}
 		else { 
 			if (ch) {
-				yDot1 += yDot2;
+				y += sy;
 			}
 			else {
-				xDot1 += xDot2;
+				x += sx;
 			}
 			e += dy2;
 		}
 	}
 }
 
-void writeLine(int x, int y, int xDot1, int yDot1, int xDot2, int yDot2, int method, HDC hdc) {
+void writeLine(const TableInfo ti, int method, SDL_Renderer* ren) {
 	switch (method) {
 	case 1:
-		writeLineCDA(x, y, xDot1, yDot1, xDot2, yDot2, hdc);
+		writeLineCDA(ti, ren);
 		break;
 	case 2:
-		writeLineBresenham(x, y, xDot1, yDot1, xDot2, yDot2, hdc);
+		writeLineBresenham(ti, ren);
 		break;
 	}
 }
 
+void tableGen(SDL_Renderer* ren, const TableInfo ti) {
+	SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+	for (int i = 0; i <= ti.xTable; i++) {
+		SDL_RenderDrawLine(	ren, 
+							i * ti.squareSize + ti.xShift, 
+							ti.yShift, 
+							i * ti.squareSize + ti.xShift, 
+							ti.yTable * ti.squareSize + ti.yShift);
+	}
+	for (int j = 0; j <= ti.yTable; j++) {
+		SDL_RenderDrawLine(	ren, 
+							ti.xShift, 
+							j * ti.squareSize + ti.yShift, 
+							ti.xTable * ti.squareSize + ti.xShift, 
+							j * ti.squareSize + ti.yShift);
+	}
+}
+
+void writeRect(SDL_Renderer* ren, const TableInfo ti, int x, int y) {
+	SDL_SetRenderDrawColor(ren, 0, 128, 128, 255);
+	SDL_Rect rect = {(x - 1) * ti.squareSize + ti.xShift + 1, (y - 1) * ti.squareSize + ti.yShift + 1, ti.squareSize - 1, ti.squareSize -1};
+	SDL_RenderFillRect(ren, &rect);
+}
+
+void endSDL(SDL_Window* win, SDL_Renderer* ren) {
+	SDL_DestroyRenderer(ren);
+	SDL_DestroyWindow(win);
+	SDL_Quit();
+}
+
+
 int main()
 {
-	int xTable, yTable, xDot1, yDot1, xDot2, yDot2;
-	getCoords(xTable, yTable, xDot1, yDot1, xDot2, yDot2);
+	TableInfo ti;
+	getCoords(ti);
 
-	HWND hwnd; HDC hdc; HBRUSH blackBrush, blueBrush; HPEN whitePen;
-	getConsole(hwnd, hdc);
-	getBrushes(blackBrush, whitePen, blueBrush);
+	if (SDL_Init(SDL_INIT_VIDEO)) exit(101);
+	SDL_Window* win = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1980, 1200, SDL_WINDOW_FULLSCREEN);
+	if (!win) {
+		SDL_Quit();
+		exit(102);
+	}
+	
+	SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+	if (!ren) {
+		SDL_DestroyWindow(win);
+		SDL_Quit();
+		exit(103);
+	}
+	SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+	SDL_RenderClear(ren);
 
-	initTable(hdc, blackBrush, whitePen);
-	tableGen(hdc, xTable, yTable);
+	tableGen(ren, ti);
+	writeLine(ti, 1, ren);
+	SDL_RenderPresent(ren);
 
-	SelectBrush(hdc, blueBrush);
+	int nipaa;
+	cin >> nipaa;
 
-	writeLine(xTable, yTable, xDot1, yDot1, xDot2, yDot2, 2, hdc);
-
-	int smth;
-	cin >> smth;
-
-	endConsole(hwnd, hdc, whitePen);
+	endSDL(win, ren);
 	return 0;
 }
