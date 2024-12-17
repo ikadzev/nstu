@@ -20,21 +20,24 @@ int main() {
 		SDL_Quit();
 		exit(103);
 	}
-	SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
-	SDL_RenderClear(ren);
-	
-	TableInfo ti;
-	getCoords(ti, type);
+	for (;;) {
+		SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+		SDL_RenderClear(ren);
+		
+		TableInfo ti;
+		getCoords(ti, type);
 
-	tableGen(ren, ti);
-	if (type == line) writeLine(ti, line_type, ren);
-	if (type == circle) writeCircle(ren, ti);
-	if (type == triangle) writeTriangle(ren, ti);
-	SDL_RenderPresent(ren);
+		tableGen(ren, ti);
+		if (type == line) writeLine(ti, line_type, ren);
+		if (type == circle) writeCircle(ren, ti);
+		if (type == triangle) writeTriangle(ren, ti);
+		SDL_RenderPresent(ren);
 
-	int nipaa;
-	cin >> nipaa;
-
-	endSDL(win, ren);
-	return 0;
+		int nipaa;
+		cin >> nipaa;
+		if (nipaa == 0) {
+			endSDL(win, ren);
+			return 0;
+		}
+	}
 }
