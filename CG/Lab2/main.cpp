@@ -1,11 +1,27 @@
 ﻿#include "graphics.h"
 
 int main() {
-	draw type = circle;
-	line_t line_type = cda;
+	draw type;
+	line_t line_type;
 	//
 	// INIT CONSTS
 	//
+
+	int i;
+	cin >> i;
+	switch(i) {
+		case 1: 
+			type = line;
+			line_type = cda;
+			break;
+		case 2:
+			type = line;
+			line_type = bresenham;
+			break;
+		case 3:
+			type = circle;
+			break;
+	}
 
 	if (SDL_Init(SDL_INIT_VIDEO)) exit(101);
 	SDL_Window* win = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1980, 1200, SDL_WINDOW_FULLSCREEN);

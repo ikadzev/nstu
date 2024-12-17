@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 using namespace std;
 
-constexpr int CELL_SIZE = 23;
+constexpr int CELL_SIZE = 11;
 constexpr int SCREEN_wIGTH = 1920;
 constexpr int SCREEN_HEIGHT = 1200;
 

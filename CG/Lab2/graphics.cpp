@@ -1,7 +1,5 @@
 #include "graphics.h"
 
-void writeRect(SDL_Renderer*, const TableInfo, int, int);
-
 void getCoords(TableInfo& ti, draw type) {
 	if (type == line) {
 		cout << "First dot (x, y):" << endl;
@@ -21,12 +19,8 @@ void getCoords(TableInfo& ti, draw type) {
 		exit(1);
 	}
 	ti.squareSize = CELL_SIZE;
-	ti.xTable = 50;
-	ti.yTable = 50;
-	// ti.xDot1 = 17;
-	// ti.yDot1 = 10;
-	// ti.xDot2 = 49;
-	// ti.yDot2 = 23;
+	ti.xTable = 100;
+	ti.yTable = 100;
 	ti.xShift = ((SCREEN_wIGTH - ti.squareSize * ti.xTable) / 2);
 	ti.yShift = ((SCREEN_HEIGHT - ti.squareSize * ti.yTable) / 2);
 }
@@ -142,7 +136,7 @@ void writeCircle(SDL_Renderer* ren, const TableInfo ti) {
         writeRect(ren, ti, ti.xDot1 + y, ti.yTable - (ti.yDot1 - x) + 1);
         writeRect(ren, ti, ti.xDot1 - y, ti.yTable - (ti.yDot1 - x) + 1);
 
-        if (d <= 0) d += 4 * x + 6;
+        if (d <= 0) d += 4 * x + 6; // bresenham
         else d += 4 * (x - y--) + 10;
         x++;
 	}
