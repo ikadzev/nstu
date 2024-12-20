@@ -16,8 +16,7 @@ private:
     }
 
 public:
-    // Конструкторы
-    Date() : day(1), month(1), year(2000) {}
+    Date() : day(1), month(1), year(2025) {}
     Date(int d, int m, int y) {
         if (!isValidDate(d, m, y)) throw invalid_argument("Invalid date");
         day = d;
@@ -26,10 +25,8 @@ public:
     }
     Date(const Date &other) : day(other.day), month(other.month), year(other.year) {}
 
-    // Деструктор
     ~Date() {}
 
-    // Оператор присваивания
     Date &operator=(const Date &other) {
         if (this != &other) {
             day = other.day;
@@ -39,13 +36,12 @@ public:
         return *this;
     }
 
-    // Бинарные арифметические операторы
     Date operator+(int days) const {
         Date result(*this);
         while (days > 0) {
             int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
             if ((result.year % 4 == 0 && result.year % 100 != 0) || (result.year % 400 == 0)) {
-                daysInMonth[1] = 29; // Leap year
+                daysInMonth[1] = 29;
             }
             int remainingDays = daysInMonth[result.month - 1] - result.day;
             if (days <= remainingDays) {
@@ -64,29 +60,32 @@ public:
         return result;
     }
 
-    // Арифметика с накоплением
     Date &operator+=(int days) {
         *this = *this + days;
         return *this;
     }
 
-    // Унарные операторы
-    Date &operator++() { // Префиксный
+    Date &operator++() {
         *this += 1;
         return *this;
     }
 
-    Date operator++(int) { // Постфиксный
+    Date operator++(int) {
         Date temp(*this);
         ++(*this);
         return temp;
     }
 
-    // Логические операторы
     bool operator<(const Date &other) const {
         if (year != other.year) return year < other.year;
         if (month != other.month) return month < other.month;
         return day < other.day;
+    }
+
+    bool operator>(const Date &other) const {
+        if (year != other.year) return year > other.year;
+        if (month != other.month) return month > other.month;
+        return day > other.day;
     }
 
     bool operator==(const Date &other) const {
@@ -97,14 +96,12 @@ public:
         return !(*this == other);
     }
 
-    // Функция вывода на экран
     friend ostream &operator<<(ostream &os, const Date &date) {
         os << (date.day < 10 ? "0" : "") << date.day << "/"
            << (date.month < 10 ? "0" : "") << date.month << "/" << date.year;
         return os;
     }
 
-    // Оператор преобразования типа
     operator string() const {
         return (day < 10 ? "0" : "") + to_string(day) + "/" +
                (month < 10 ? "0" : "") + to_string(month) + "/" + to_string(year);
