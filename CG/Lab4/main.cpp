@@ -5,14 +5,13 @@ int main() {
 	cout << "CELL_SIZE " << CELL_SIZE << endl;
 	cout << "TABLE_SIZE " << TABLE_SIZE << endl;
 	cout << "SCREEN_SIZE " << SCREEN_WIGTH << " x " << SCREEN_HEIGHT << endl;
+	cout << "AltF4 the SDL window to close" << endl;
 
-	draw_t draw_type = draw_t::null;
-	while (draw_type == draw_t::null) draw_type = getDrawType();
-	TableInfo ti;
-	getCoords(ti, draw_type);
+	draw_t draw_type = draw_t::null; TableInfo ti;
+	clearColors(ti);
 
 	if (SDL_Init(SDL_INIT_VIDEO)) exit(101);
-	SDL_Window* win = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1980, 1200, SDL_WINDOW_FULLSCREEN);
+	SDL_Window* win = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIGTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (!win) {
 		SDL_Quit();
 		exit(102);
@@ -27,23 +26,44 @@ int main() {
 	SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 	SDL_RenderClear(ren);
 
-	tableGen(ren, ti);
-	if (draw_type == cda || draw_type == bresenham)
-		writeLine(ti, draw_type, ren, 0xffcb47);
-	if (draw_type == triangle) { 
-		fillTriangle(ren, ti, 0xffc564, 0x860202);
-		writeLine(ti, draw_type, ren, 0xffcb47);
-	}
-	if (draw_type == circle) writeCircle(ren, ti, 0xffcb47);
-	SDL_RenderPresent(ren);
-
 	bool running = true;
-	SDL_Event event;
 	while (running) {
-		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) running = false;
+		while (draw_type == draw_t::null) draw_type = getDrawType();
+		if (draw_type != render && draw_type != exiting) getCoords(ti, draw_type);
+		tableGen(ren, ti);
+		switch (draw_type) {
+			case triangle:
+				fillTriangle(ren, ti, FLOOD_COLOR);
+			case cda:
+			case bresenham:
+				writeLine(ti, draw_type, ren, WALL_COLOR);
+				break;
+			case circle:
+				writeCircle(ren, ti, WALL_COLOR);
+				break;
+			case filling:
+				floodFill(ren, ti, ti.xFill, ti.yFill, WALL_COLOR, FLOOD_COLOR);
+				break;
+			case render:
+				SDL_RenderPresent(ren);
+				SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+				SDL_RenderClear(ren);
+				clearColors(ti);
+				break;
+			case exiting:
+				running = false;
 		}
+		draw_type = draw_t::null;
 	}
+	
+
+	// bool running = true;
+	// SDL_Event event;
+	// while (running) {
+	// 	while (SDL_PollEvent(&event)) {
+	// 		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) running = false;
+	// 	}
+	// }
 
 	endSDL(win, ren);
 	return 0;

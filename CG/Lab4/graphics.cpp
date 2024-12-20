@@ -2,15 +2,11 @@
 
 // Deciding what are we doing
 draw_t getDrawType() {
-	cout << "Choose drawing type:\n 1. Line\n 2. Circle\n 3. Triangle\n 4. Fill\n 5. Change CONSTS\n 0. Exit" << endl;
+	cout << "Choose drawing type:\n 1. Line\n 2. Circle\n 3. Triangle\n 4. Fill\n 5. Change CONSTS" << endl;
+	cout << " 6. Render and clear\n 0. Exit" << endl;
 	int i;
 	cin >> i;
 	switch(i) {
-		case 2: return circle;
-		case 3: return triangle;
-		case 4: return filling;
-		case 5: cout << "Nuh-uh" << endl; return draw_t::null;
-		case 0: exit(0);
 		case 1:
 			cout << "Choose line type:\n 1. CDA\n 2. Bresenham" << endl;
 			cin >> i;
@@ -19,6 +15,12 @@ draw_t getDrawType() {
 				case 2: return bresenham;
 				default: return draw_t::null;
 			}
+		case 2: return circle;
+		case 3: return triangle;
+		case 4: return filling;
+		case 5: cout << "Nuh-uh" << endl; return draw_t::null;
+		case 6: return render;
+		case 0: return exiting;
 		default: return draw_t::null;
 	}
 } 
@@ -87,7 +89,7 @@ void getCoords(TableInfo& ti, draw_t type) {
 }
 
 // Writing line with CDA
-void writeLineCDA(const TableInfo ti, SDL_Renderer* ren, int xDot1, int yDot1, int xDot2, int yDot2, int color) {
+void writeLineCDA(TableInfo& ti, SDL_Renderer* ren, int xDot1, int yDot1, int xDot2, int yDot2, int color) {
 	int length = max(abs(xDot1 - xDot2), abs(yDot1 - yDot2));
 
 	float dx = (float)(xDot2 - xDot1) / length;
@@ -105,7 +107,7 @@ void writeLineCDA(const TableInfo ti, SDL_Renderer* ren, int xDot1, int yDot1, i
 }
 
 // Writing line with Brezenham
-void writeLineBresenham(const TableInfo ti, SDL_Renderer* ren, int xDot1, int yDot1, int xDot2, int yDot2, int color) {
+void writeLineBresenham(TableInfo& ti, SDL_Renderer* ren, int xDot1, int yDot1, int xDot2, int yDot2, int color) {
 	int dx, dy, ch = 0, i = 0, e, dx2, dy2;
 	int x = xDot1, y = yDot1;
 	
@@ -147,7 +149,7 @@ void writeLineBresenham(const TableInfo ti, SDL_Renderer* ren, int xDot1, int yD
 }
 
 // Drawing line with method in draw_t
-void writeLine(const TableInfo ti, draw_t method, SDL_Renderer* ren, int color) {
+void writeLine(TableInfo& ti, draw_t method, SDL_Renderer* ren, int color) {
 	if (method == cda) writeLineCDA(ti, ren, ti.xDot1, ti.yDot1, ti.xDot2, ti.yDot2, color);
     if (method == bresenham) writeLineBresenham(ti, ren, ti.xDot1, ti.yDot1, ti.xDot2, ti.yDot2, color);
 	if (method == triangle) {
@@ -177,8 +179,9 @@ void tableGen(SDL_Renderer* ren, const TableInfo ti) {
 }
 
 // Drawing rectangle in table
-void writeRect(SDL_Renderer* ren, const TableInfo ti, int x, int y, int color) {
+void writeRect(SDL_Renderer* ren, TableInfo& ti, int x, int y, int color) {
 	if (x > TABLE_SIZE || y > TABLE_SIZE || x < 1 || y < 1) return;
+	ti.colors[x][y] = color;
 	SDL_SetRenderDrawColor(ren, color >> 16, (color >> 8) & 0xFF, color & 0xFF, SDL_ALPHA_OPAQUE);
 	SDL_Rect rect = {   (x - 1) * CELL_SIZE + ti.xShift + 1, 
                         (y - 1) * CELL_SIZE + ti.yShift + 1, 
@@ -195,7 +198,7 @@ void endSDL(SDL_Window* win, SDL_Renderer* ren) {
 }
 
 // Writing circle with Bresenham
-void writeCircle(SDL_Renderer* ren, const TableInfo ti, int color) {
+void writeCircle(SDL_Renderer* ren, TableInfo& ti, int color) {
 	int x = 0, y = ti.radius, d = 3 - 2 * ti.radius;
 
 	while (x <= y) {
@@ -215,20 +218,34 @@ void writeCircle(SDL_Renderer* ren, const TableInfo ti, int color) {
 }
 
 // Filling triangle with CDA
-void fillTriangle(SDL_Renderer* ren, const TableInfo ti, int color1, int color2) {
+void fillTriangle(SDL_Renderer* ren, TableInfo& ti, int color) {
 	int x1, x2;
 	for (int sy = ti.yDot1 - 1; sy >= ti.yDot3; sy--) {
 		x1 = ti.xDot1 + (sy - ti.yDot1) * (ti.xDot3 - ti.xDot1) / (ti.yDot3 - ti.yDot1);
 		if (sy > ti.yDot2) x2 = ti.xDot1 + (sy - ti.yDot1) * (ti.xDot2 - ti.xDot1) / (ti.yDot2 - ti.yDot1);
 		else if (ti.yDot2 == ti.yDot3) x2 = ti.xDot2;
 		else x2 = ti.xDot2 + (sy - ti.yDot2) * (ti.xDot3 - ti.xDot2) / (ti.yDot3 - ti.yDot2);
-		writeLineCDA(ti, ren, x1, sy, x2, sy, color2);
-		SDL_Delay(200);
-		SDL_RenderPresent(ren);
+		writeLineCDA(ti, ren, x1, sy, x2, sy, color);
 	}
 }
 
-void floodFill(SDL_Renderer* ren, const TableInfo ti, int x, int y, int wall_color, int flood_colort) {
-
+void floodFill(SDL_Renderer* ren, TableInfo& ti, int x, int y, int wall_color, int flood_color) {
+	if (getColor(ti, x, y) == wall_color || getColor(ti, x, y) == flood_color) return;
+	cout << getColor(ti, x, y) << " " << wall_color << " " << flood_color << endl;
+	cout << x << " " << y << endl;
+	writeRect(ren, ti, x, TABLE_SIZE - y + 1, flood_color);
+	if (x < TABLE_SIZE) floodFill(ren, ti, x + 1, y, wall_color, flood_color);
+	if (x > 1) floodFill(ren, ti, x - 1, y, wall_color, flood_color);
+	if (y < TABLE_SIZE) floodFill(ren, ti, x, y + 1, wall_color, flood_color);
+	if (x > 1) floodFill(ren, ti, x, y - 1, wall_color, flood_color);
 }
 
+int getColor(TableInfo& ti, int x, int y) { return ti.colors[x][TABLE_SIZE - y + 1]; }
+
+void clearColors(TableInfo& ti) {
+	for (int i = 1; i < TABLE_SIZE + 1; i++) {
+		for (int j = 1; j < TABLE_SIZE + 1; j++) {
+			ti.colors[i][j] = 0;
+		}
+	}
+}
