@@ -7,7 +7,7 @@ from math import log2
 
 def numToSimples(inp):
     itr = 0
-    for i in range(1, inp):
+    for i in range(1, inp // 2):
         simp, itr = isSimple(i, itr)
         if simp:
             simp, itr = isSimple(inp - i, itr)
