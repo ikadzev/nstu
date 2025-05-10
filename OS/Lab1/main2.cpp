@@ -1,5 +1,8 @@
 #include <iostream>
 #include <sys/wait.h>
+#include <vector>
+
+std::vector<pid_t> pids; 
 
 pid_t forkin() {
     pid_t f = fork();
@@ -27,18 +30,22 @@ int main() {
         switch (comm) {
             case 1:
                 forked = forkin();
+                pids.push_back(forked);
                 break;
             case 2:
-                if (forked) {
-                    kill(forked, SIGTERM);
+                if (!pids.empty()) {
+                    kill(pids.back(), SIGTERM);
                     waitpid(forked, NULL, 0);
+                    pids.pop_back();
+                } else {
+                    std::cout << "Нет открытых процессов" << std::endl;
                 }
-                forked = 0;
                 break;
             case 3:
-                if (forked) {
-                    kill(forked, SIGTERM);
+                while (!pids.empty()) {
+                    kill(pids.back(), SIGTERM);
                     waitpid(forked, NULL, 0);
+                    pids.pop_back();
                 }
                 exiting = true;
                 break; 
