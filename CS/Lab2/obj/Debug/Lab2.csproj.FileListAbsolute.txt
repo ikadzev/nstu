@@ -8,3 +8,13 @@ A:\CALICOMP\SPACE\nstu\CS\Lab2\obj\Debug\Lab2.csproj.GenerateResource.cache
 A:\CALICOMP\SPACE\nstu\CS\Lab2\obj\Debug\Lab2.csproj.CoreCompileInputs.cache
 A:\CALICOMP\SPACE\nstu\CS\Lab2\obj\Debug\Lab2.exe
 A:\CALICOMP\SPACE\nstu\CS\Lab2\obj\Debug\Lab2.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\bin\Debug\Lab2.exe.config
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\bin\Debug\Lab2.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\bin\Debug\Lab2.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.csproj.AssemblyReference.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.Form1.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.Properties.Resources.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.csproj.GenerateResource.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.csproj.CoreCompileInputs.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab2\obj\Debug\Lab2.pdb

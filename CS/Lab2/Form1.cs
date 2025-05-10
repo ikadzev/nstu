@@ -17,6 +17,7 @@ namespace Lab2
             var clear = new string(str.Where(char.IsLetterOrDigit).ToArray()).ToLower();
             return clear.SequenceEqual(clear.Reverse());
         }
+
         public Form1()
         {
             InitializeComponent();
