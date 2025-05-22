@@ -4,40 +4,38 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Lab1
 {
     public partial class Form1 : Form
     {
         ObjModel model = new ObjModel();
-        Matrix4x4 transform = new Matrix4x4();
         float scale = 1.0f;
         float rotateX = 0.0f;
         float rotateY = 0.0f;
+        float rotateZ = 0.0f;
         float translateX = 0.0f;
         float translateY = 0.0f;
-        float translateZ = 0.0f;
+        bool invisible = false;
 
         public Form1()
         {
             InitializeComponent();
 
-            // Настроить TrackBar'ы
-            trackBar1.Minimum = 1; trackBar1.Maximum = 200; trackBar1.Value = 100; // Масштаб
+            trackBar1.Minimum = 10; trackBar1.Maximum = 300; trackBar1.Value = 100; // Масштаб
             trackBar2.Minimum = -180; trackBar2.Maximum = 180; // Поворот X
             trackBar3.Minimum = -180; trackBar3.Maximum = 180; // Поворот Y
+            trackBar7.Minimum = -180; trackBar7.Maximum = 180; // Поворот Y
             trackBar4.Minimum = -100; trackBar4.Maximum = 100; // Перемещение X
             trackBar5.Minimum = -100; trackBar5.Maximum = 100; // Перемещение Y
-            trackBar6.Minimum = -100; trackBar6.Maximum = 100; // Перемещение Z
 
-            // Подключаем обработчики событий
             trackBar1.ValueChanged += (s, e) => { UpdateTransform(); };
             trackBar2.ValueChanged += (s, e) => { UpdateTransform(); };
             trackBar3.ValueChanged += (s, e) => { UpdateTransform(); };
             trackBar4.ValueChanged += (s, e) => { UpdateTransform(); };
             trackBar5.ValueChanged += (s, e) => { UpdateTransform(); };
-            trackBar6.ValueChanged += (s, e) => { UpdateTransform(); };
+            trackBar7.ValueChanged += (s, e) => { UpdateTransform(); };
+            checkBox1.CheckedChanged += (s, e) => { UpdateTransform(); };
             button1.Click += Button1_Click;
 
             pictureBox1.Paint += PictureBox1_Paint;
@@ -60,27 +58,12 @@ namespace Lab1
             scale = trackBar1.Value / 100f;
             rotateX = DegreesToRadians(trackBar2.Value);
             rotateY = DegreesToRadians(trackBar3.Value);
+            rotateZ = DegreesToRadians(trackBar7.Value);
             translateX = trackBar4.Value;
             translateY = trackBar5.Value;
-            translateZ = trackBar6.Value;
-            label8.Text = transform.M[0, 0].ToString();
-            label9.Text = transform.M[0, 1].ToString();
-            label11.Text = transform.M[0, 2].ToString();
-            label10.Text = transform.M[0, 3].ToString();
-            label15.Text = transform.M[1, 0].ToString();
-            label14.Text = transform.M[1, 1].ToString();
-            label13.Text = transform.M[1, 2].ToString();
-            label12.Text = transform.M[1, 3].ToString();
-            label23.Text = transform.M[2, 0].ToString();
-            label22.Text = transform.M[2, 1].ToString();
-            label21.Text = transform.M[2, 2].ToString();
-            label20.Text = transform.M[2, 3].ToString();
-            label19.Text = transform.M[3, 0].ToString();
-            label18.Text = transform.M[3, 1].ToString();
-            label17.Text = transform.M[3, 2].ToString();
-            label16.Text = transform.M[3, 3].ToString();
+            invisible = checkBox1.Checked;
 
-            pictureBox1.Invalidate(); // Перерисовать PictureBox
+            pictureBox1.Invalidate();
         }
 
         private Vector3 CenterFig()
@@ -89,6 +72,30 @@ namespace Lab1
             float cY = model.Vertices.Average(v => v.Y);
             float cZ = model.Vertices.Average(v => v.Z);
             return new Vector3(cX, cY, cZ);
+        }
+
+        private Vector3 Normal((int, int, int) face, List<Vector3> points)
+        {
+            Vector3 v1 = points[face.Item1];
+            Vector3 v2 = points[face.Item2];
+            Vector3 v3 = points[face.Item3];
+
+            Vector3 u = new Vector3(v2.X - v1.X, v2.Y - v1.Y, v2.Z - v1.Z);
+            Vector3 v = new Vector3(v3.X - v1.X, v3.Y - v1.Y, v3.Z - v1.Z);
+
+            float nx = u.Y * v.Z - u.Z * v.Y;
+            float ny = u.Z * v.X - u.X * v.Z;
+            float nz = u.X * v.Y - u.Y * v.X;
+
+            float length = (float)Math.Sqrt(nx * nx + ny * ny + nz * nz);
+            if (length > 0)
+            {
+                nx /= length;
+                ny /= length;
+                nz /= length;
+            }
+
+            return new Vector3(nx, ny, nz);
         }
 
         private void PictureBox1_Paint(object sender, PaintEventArgs e)
@@ -102,50 +109,30 @@ namespace Lab1
             int h = pictureBox1.Height;
             Vector3 c = CenterFig();
 
-            transform =
-                Matrix4x4.CreateTranslation(-translateX, -translateY, -translateZ) *
-                Matrix4x4.CreateScale(scale) *
-                Matrix4x4.CreateRotationX(rotateX) *
-                Matrix4x4.CreateRotationY(rotateY) *
-                Matrix4x4.CreateTranslation(translateX, translateY, translateZ);
-                //Matrix4x4.CreateTranslation(c.X, c.Y, c.Z);
-
-            var points = model.Vertices.Select(v =>
+            var transform = model.Vertices.Select(v =>
             {
-                var t = transform.Transform(v);
-                return new PointF(t.X * scale + w / 2, -t.Y * scale + h / 2); // Отразить Y
+                var t = v *
+                    Matrix4x4.CreateTranslation(-c.X, -c.Y, -c.Z) *
+                    Matrix4x4.CreateScale(scale) *
+                    Matrix4x4.CreateRotationX(rotateX) *
+                    Matrix4x4.CreateRotationY(rotateY) *
+                    Matrix4x4.CreateRotationZ(rotateZ) *
+                    Matrix4x4.CreateTranslation(translateX, translateY, 0) *
+                    Matrix4x4.CreateTranslation(c.X, c.Y, c.Z);
+                //return new PointF(t.X + w / 2, -t.Y + h / 2); // Отразить Y
+                return t;
             }).ToList();
+            var points = transform.Select(v => new PointF(v.X + w / 2, -v.Y + h / 2)).ToList();
 
             foreach (var face in model.Faces)
             {
-                g.DrawLine(Pens.Black, points[face.Item1], points[face.Item2]);
-                g.DrawLine(Pens.Black, points[face.Item2], points[face.Item3]);
-                g.DrawLine(Pens.Black, points[face.Item3], points[face.Item1]);
-            }
-
-            //DrawAxes(g, transform, w, h);
-        }
-        private void DrawAxes(Graphics g, Matrix4x4 transform, int w, int h)
-        {
-            float axisLength = 100.0f;
-
-            var origin = transform.Transform(new Vector3(0, 0, 0));
-            var xAxis = transform.Transform(new Vector3(axisLength, 0, 0));
-            var yAxis = transform.Transform(new Vector3(0, axisLength, 0));
-            var zAxis = transform.Transform(new Vector3(0, 0, axisLength));
-
-            PointF pOrigin = new PointF(origin.X + w / 2, -origin.Y + h / 2);
-            PointF pX = new PointF(xAxis.X + w / 2, -xAxis.Y + h / 2);
-            PointF pY = new PointF(yAxis.X + w / 2, -yAxis.Y + h / 2);
-            PointF pZ = new PointF(zAxis.X + w / 2, -zAxis.Y + h / 2);
-
-            using (var redPen = new Pen(Color.Red, 2))
-            using (var greenPen = new Pen(Color.Green, 2))
-            using (var bluePen = new Pen(Color.Blue, 2))
-            {
-                g.DrawLine(redPen, pOrigin, pX);   // X - Красная
-                g.DrawLine(greenPen, pOrigin, pY); // Y - Зелёная
-                g.DrawLine(bluePen, pOrigin, pZ);  // Z - Синяя
+                Vector3 view = new Vector3(0, 0, -1);
+                if ((Normal(face, transform).Z * view.Z > 0) | !invisible)
+                {
+                    g.DrawLine(Pens.Black, points[face.Item1], points[face.Item2]);
+                    g.DrawLine(Pens.Black, points[face.Item2], points[face.Item3]);
+                    g.DrawLine(Pens.Black, points[face.Item3], points[face.Item1]);
+                }
             }
         }
 
@@ -178,9 +165,47 @@ namespace Lab1
         {
             return (float)(Math.PI / 180.0) * degrees;
         }
-    }
 
-    // Модель и математика
+        private void label5_Click(object sender, EventArgs e)
+        {
+            trackBar4.Value = 0;
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+            trackBar5.Value = 0;
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            trackBar2.Value = 0;
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+            trackBar3.Value = 0;
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+            trackBar7.Value = 0;
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            trackBar1.Value = 100;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            trackBar1.Value = 100;
+            trackBar2.Value = 0;
+            trackBar3.Value = 0;
+            trackBar4.Value = 0;
+            trackBar5.Value = 0;
+            trackBar7.Value = 0;
+        }
+    }
 
     public class ObjModel
     {
@@ -192,6 +217,14 @@ namespace Lab1
     {
         public float X, Y, Z;
         public Vector3(float x, float y, float z) { X = x; Y = y; Z = z; }
+
+        public static Vector3 operator *(Vector3 v, Matrix4x4 m)
+        {
+            float x = m.M[0, 0] * v.X + m.M[0, 1] * v.Y + m.M[0, 2] * v.Z + m.M[0, 3] * 1;
+            float y = m.M[1, 0] * v.X + m.M[1, 1] * v.Y + m.M[1, 2] * v.Z + m.M[1, 3] * 1;
+            float z = m.M[2, 0] * v.X + m.M[2, 1] * v.Y + m.M[2, 2] * v.Z + m.M[2, 3] * 1;
+            return new Vector3(x, y, z);
+        }
 
     }
 
@@ -213,14 +246,6 @@ namespace Lab1
                     for (int k = 0; k < 4; k++)
                         result.M[row, col] += a.M[row, k] * b.M[k, col];
             return result;
-        }
-
-        public Vector3 Transform(Vector3 v)
-        {
-            float x = v.X * M[0, 0] + v.Y * M[0, 1] + v.Z * M[0, 2] + M[0, 3];
-            float y = v.X * M[1, 0] + v.Y * M[1, 1] + v.Z * M[1, 2] + M[1, 3];
-            float z = v.X * M[2, 0] + v.Y * M[2, 1] + v.Z * M[2, 2] + M[2, 3];
-            return new Vector3(x, y, z);
         }
 
         public static Matrix4x4 CreateScale(float s)
@@ -260,6 +285,17 @@ namespace Lab1
             m.M[0, 2] = s;
             m.M[2, 0] = -s;
             m.M[2, 2] = c;
+            return m;
+        }
+        public static Matrix4x4 CreateRotationZ(float angle)
+        {
+            var m = new Matrix4x4();
+            float c = (float)Math.Cos(angle);
+            float s = (float)Math.Sin(angle);
+            m.M[0, 0] = c;
+            m.M[0, 1] = -s;
+            m.M[1, 0] = s;
+            m.M[1, 1] = c;
             return m;
         }
     }
