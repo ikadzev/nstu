@@ -1,0 +1,10 @@
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\bin\Debug\Lab6.exe.config
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\bin\Debug\Lab6.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\bin\Debug\Lab6.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.csproj.AssemblyReference.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.Form1.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.Properties.Resources.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.csproj.GenerateResource.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.csproj.CoreCompileInputs.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab6\obj\Debug\Lab6.pdb

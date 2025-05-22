@@ -1,0 +1,10 @@
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\bin\Debug\Lab8.exe.config
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\bin\Debug\Lab8.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\bin\Debug\Lab8.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.csproj.AssemblyReference.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.Form1.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.Properties.Resources.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.csproj.GenerateResource.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.csproj.CoreCompileInputs.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Lab8\obj\Debug\Lab8.pdb

@@ -27,14 +27,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "Title": "Form1.cs [Design]",
               "DocumentMoniker": "A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CS\\Lab1\\WindowsFormsApp1\\WindowsFormsApp1\\Form1.cs",
               "RelativeDocumentMoniker": "WindowsFormsApp1\\Form1.cs",
-              "ToolTip": "A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CS\\Lab1\\WindowsFormsApp1\\WindowsFormsApp1\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "RelativeToolTip": "WindowsFormsApp1\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "ToolTip": "A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CS\\Lab1\\WindowsFormsApp1\\WindowsFormsApp1\\Form1.cs [Design]",
+              "RelativeToolTip": "WindowsFormsApp1\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-27T08:15:37.994Z",
-              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
@@ -46,8 +46,7 @@
               "RelativeToolTip": "WindowsFormsApp1\\Form1.Designer.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAQwDQAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T07:24:54.038Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T07:24:54.038Z"
             },
             {
               "$type": "Document",
