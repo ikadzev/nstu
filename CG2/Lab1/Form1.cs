@@ -16,7 +16,6 @@ namespace Lab1
         float rotateZ = 0.0f;
         float translateX = 0.0f;
         float translateY = 0.0f;
-        bool invisible = false;
 
         public Form1()
         {
@@ -35,7 +34,6 @@ namespace Lab1
             trackBar4.ValueChanged += (s, e) => { UpdateTransform(); };
             trackBar5.ValueChanged += (s, e) => { UpdateTransform(); };
             trackBar7.ValueChanged += (s, e) => { UpdateTransform(); };
-            checkBox1.CheckedChanged += (s, e) => { UpdateTransform(); };
             button1.Click += Button1_Click;
 
             pictureBox1.Paint += PictureBox1_Paint;
@@ -61,7 +59,6 @@ namespace Lab1
             rotateZ = DegreesToRadians(trackBar7.Value);
             translateX = trackBar4.Value;
             translateY = trackBar5.Value;
-            invisible = checkBox1.Checked;
 
             pictureBox1.Invalidate();
         }
@@ -72,30 +69,6 @@ namespace Lab1
             float cY = model.Vertices.Average(v => v.Y);
             float cZ = model.Vertices.Average(v => v.Z);
             return new Vector3(cX, cY, cZ);
-        }
-
-        private Vector3 Normal((int, int, int) face, List<Vector3> points)
-        {
-            Vector3 v1 = points[face.Item1];
-            Vector3 v2 = points[face.Item2];
-            Vector3 v3 = points[face.Item3];
-
-            Vector3 u = new Vector3(v2.X - v1.X, v2.Y - v1.Y, v2.Z - v1.Z);
-            Vector3 v = new Vector3(v3.X - v1.X, v3.Y - v1.Y, v3.Z - v1.Z);
-
-            float nx = u.Y * v.Z - u.Z * v.Y;
-            float ny = u.Z * v.X - u.X * v.Z;
-            float nz = u.X * v.Y - u.Y * v.X;
-
-            float length = (float)Math.Sqrt(nx * nx + ny * ny + nz * nz);
-            if (length > 0)
-            {
-                nx /= length;
-                ny /= length;
-                nz /= length;
-            }
-
-            return new Vector3(nx, ny, nz);
         }
 
         private void PictureBox1_Paint(object sender, PaintEventArgs e)
@@ -126,13 +99,9 @@ namespace Lab1
 
             foreach (var face in model.Faces)
             {
-                Vector3 view = new Vector3(0, 0, -1);
-                if ((Normal(face, transform).Z * view.Z > 0) | !invisible)
-                {
-                    g.DrawLine(Pens.Black, points[face.Item1], points[face.Item2]);
-                    g.DrawLine(Pens.Black, points[face.Item2], points[face.Item3]);
-                    g.DrawLine(Pens.Black, points[face.Item3], points[face.Item1]);
-                }
+                g.DrawLine(Pens.Black, points[face.Item1], points[face.Item2]);
+                g.DrawLine(Pens.Black, points[face.Item2], points[face.Item3]);
+                g.DrawLine(Pens.Black, points[face.Item3], points[face.Item1]);
             }
         }
 

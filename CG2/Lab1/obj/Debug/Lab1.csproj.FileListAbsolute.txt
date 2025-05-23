@@ -18,3 +18,13 @@ A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\Lab1\obj\Debug\Lab1.csproj.Generat
 A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\Lab1\obj\Debug\Lab1.csproj.CoreCompileInputs.cache
 A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\Lab1\obj\Debug\Lab1.exe
 A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\Lab1\obj\Debug\Lab1.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\bin\Debug\Lab1.exe.config
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\bin\Debug\Lab1.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\bin\Debug\Lab1.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.csproj.AssemblyReference.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.Form1.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.Properties.Resources.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.csproj.GenerateResource.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.csproj.CoreCompileInputs.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CG2\Lab1\obj\Debug\Lab1.pdb
