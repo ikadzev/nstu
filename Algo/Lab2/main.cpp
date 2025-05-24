@@ -16,7 +16,8 @@ public:
     Tribios() : name(""), isWord(false) {}
     Tribios(const std::string& name) : name(name), isWord(false) {}
 
-    void insert(const std::string& key, size_t index = 0) {
+    void insert(const std::string& key, int* count = nullptr, size_t index = 0) {
+        if (count) (*count)++;
         if (index > key.length()) return;
         if (key.empty()) return;
         if (key.length() - index == 0) {
@@ -24,12 +25,16 @@ public:
             return;
         }
         if (kids.find(key[index]) == kids.end()) {
+            if (count) (*count)++;
             kids[key[index]] = new Tribios(name + key[index]);
         }
-        kids[key[index]]->insert(key, index + 1);
+        kids[key[index]]->insert(key, count, index + 1);
     }
 
-    bool seek(const std::string& key, size_t index = 0) {
+    bool seek(const std::string& key, int* count = nullptr, size_t index = 0) {
+        if (count) {
+            (*count)++;
+        }
         if (index > key.length()) return false;
         if (key.empty()) return true;
         if (key.length() - index == 0) {
@@ -38,7 +43,7 @@ public:
         if (kids.find(key[index]) == kids.end()) {
             return false;
         }
-        return kids[key[index]]->seek(key, index + 1);
+        return kids[key[index]]->seek(key, count, index + 1);
     }
 
     void print() {
@@ -65,29 +70,24 @@ std::string generateRandomString(size_t length) {
 
 void benchmark(const std::string& name, std::vector<std::string>& dataset) {
     Tribios t;
-
+    int time = 0;
     // Insertion
-    auto start = std::chrono::high_resolution_clock::now();
     for (const auto& word : dataset)
-        t.insert(word);
-    auto end = std::chrono::high_resolution_clock::now();
+        t.insert(word, &time);
     std::cout << "[" << name << "] Insertion time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
+              << time / dataset.size() << " operations\n";
 
+    time = 0;
     // Search
-    start = std::chrono::high_resolution_clock::now();
     for (const auto& word : dataset)
-        assert(t.seek(word));
-    end = std::chrono::high_resolution_clock::now();
+        assert(t.seek(word, &time));
     std::cout << "[" << name << "] Search time: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-              << " ms\n";
+              << time / dataset.size() << " operations\n";
 }
 
 int main() {
     Tribios t;
-    std::vector<std::string> elems = {"aisubdf", "qnwovtb", "bvksjxhbi", "what", "i", "wow", "ggwp", "kvuzy", "ziuaewtbci"};
+    std::vector<std::string> elems = {"aisubdf", "qnwovtb", "bvksjxhbi", "what", "i", "wow", "wow", "ggwp", "kvuzy", "ziuaewtbci"};
     for (std::string i : elems) {
         t.insert(i);
     }
