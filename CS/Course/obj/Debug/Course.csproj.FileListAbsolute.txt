@@ -1,0 +1,11 @@
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\bin\Debug\Course.exe.config
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\bin\Debug\Course.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\bin\Debug\Course.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.csproj.AssemblyReference.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.Form1.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.Properties.Resources.resources
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.csproj.GenerateResource.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.csproj.CoreCompileInputs.cache
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.exe
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.pdb
+A:\CALICOMP\ПАПОЧКИ\gits\nstu\CS\Course\obj\Debug\Course.exe.config
