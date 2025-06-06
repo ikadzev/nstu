@@ -3,11 +3,11 @@
   "WorkspaceRootPath": "A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CG2\\Lab4\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{83CAC9FD-503A-4DA3-A797-9A01F5C2EE28}|Lab3.csproj|A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CG2\\Lab4\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{83CAC9FD-503A-4DA3-A797-9A01F5C2EE28}|Lab3.csproj|a:\\calicomp\\\u043F\u0430\u043F\u043E\u0447\u043A\u0438\\gits\\nstu\\cg2\\lab4\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{83CAC9FD-503A-4DA3-A797-9A01F5C2EE28}|Lab3.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83CAC9FD-503A-4DA3-A797-9A01F5C2EE28}|Lab3.csproj|a:\\calicomp\\\u043F\u0430\u043F\u043E\u0447\u043A\u0438\\gits\\nstu\\cg2\\lab4\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{83CAC9FD-503A-4DA3-A797-9A01F5C2EE28}|Lab3.csproj|A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CG2\\Lab4\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83CAC9FD-503A-4DA3-A797-9A01F5C2EE28}|Lab3.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "Form1.cs",
               "ToolTip": "A:\\CALICOMP\\\u041F\u0410\u041F\u041E\u0427\u041A\u0418\\gits\\nstu\\CG2\\Lab4\\Form1.cs",
               "RelativeToolTip": "Form1.cs",
-              "ViewState": "AgIAAGoAAAAAAAAAAAAcwCoAAABJAAAAAAAAAA==",
+              "ViewState": "AgIAAP8AAAAAAAAAAAAkwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-25T15:25:53.808Z",
               "IsPinned": true,
