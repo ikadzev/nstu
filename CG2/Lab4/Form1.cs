@@ -239,9 +239,9 @@ namespace Lab3
                 if (line.StartsWith("v "))
                 {
                     var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    float x = float.Parse(parts[1]);
-                    float y = float.Parse(parts[2]);
-                    float z = float.Parse(parts[3]);
+                    float x = float.Parse(parts[1].Replace('.', ','));
+                    float y = float.Parse(parts[2].Replace('.', ','));
+                    float z = float.Parse(parts[3].Replace('.', ','));
                     model.Vertices.Add(new Vector3(x, y, z));
                 }
                 else if (line.StartsWith("f "))
