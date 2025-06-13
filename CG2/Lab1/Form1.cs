@@ -207,16 +207,6 @@ namespace Lab1
                 M[i, i] = 1;
         }
 
-        public static Matrix4x4 operator *(Matrix4x4 a, Matrix4x4 b)
-        {
-            var result = new Matrix4x4();
-            for (int row = 0; row < 4; row++)
-                for (int col = 0; col < 4; col++)
-                    for (int k = 0; k < 4; k++)
-                        result.M[row, col] += a.M[row, k] * b.M[k, col];
-            return result;
-        }
-
         public static Matrix4x4 CreateScale(float s)
         {
             var m = new Matrix4x4();
