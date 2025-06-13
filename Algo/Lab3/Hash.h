@@ -50,11 +50,6 @@ public:
         operations++;
         int index = hash(key);
         Node* current = table[index];
-        // while (current->next) {
-        //     if (current->next->value == key) return;
-        //     current = current->next;
-        //     operations++;
-        // }
         Node* newNode = new Node(key);
         newNode->next = current->next;
         current->next = newNode;

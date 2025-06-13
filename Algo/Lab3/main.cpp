@@ -6,7 +6,7 @@
 #include "Hash.h"
 
 void benchmark(double loadFactor, int trials = 10000) {
-    int tableSize = 10007;
+    int tableSize = 32;
     int elementCount = static_cast<int>(tableSize * loadFactor);
     std::vector<double> values;
 
@@ -33,9 +33,6 @@ void benchmark(double loadFactor, int trials = 10000) {
          << " | Insert: " << insert_time / values.size()
          << " | Search: " << (search_time - insert_time) / trials
          << " | Delete: " << (delete_time - search_time) / trials << std::endl;
-        // << " | Insert: " << insert_time << " ns"
-        //  << " | Search: " << search_time << " ns"
-        //  << " | Delete: " << delete_time << " ns\n";
 }
 
 int main() {
