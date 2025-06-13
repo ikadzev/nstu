@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Course
@@ -25,7 +20,7 @@ namespace Course
         private Keys recordKey = Keys.F10;
         private bool waitingForScreenshotKey = false;
         private bool waitingForRecordKey = false;
-
+        private string saveDirectory = "./"; // Default save directory
 
         public Form1()
         {
@@ -39,8 +34,7 @@ namespace Course
         private void lockButtons()
         {
             label1.Enabled = false;
-            label2.Enabled = false;
-            //label3.Enabled = false;
+            label3.Enabled = false;
             label4.Enabled = false;
             label5.Enabled = false;
             checkBox1.Enabled = false;
@@ -54,8 +48,7 @@ namespace Course
         private void unlockButtons()
         {
             label1.Enabled = true;
-            label2.Enabled = true;
-            //label3.Enabled = false;
+            label3.Enabled = true;
             label4.Enabled = true;
             label5.Enabled = true;
             checkBox1.Enabled = true;
@@ -118,6 +111,19 @@ namespace Course
             this.Focus();
         }
 
+        private void buttonSaveDirectory_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "Выберите папку для сохранения скриншотов и записей";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    saveDirectory = dialog.SelectedPath;
+                    MessageBox.Show($"Папка сохранения установлена: {saveDirectory}");
+                }
+            }
+        }
+
         private void UpdateFPS(object sender, EventArgs e)
         {
             if (int.TryParse(textBox1.Text, out int newFps) && newFps > 0)
@@ -152,7 +158,7 @@ namespace Course
                         {
                             selectedRegion = selector.SelectedRegion;
                             var screenshot = CaptureRegion(selectedRegion);
-                            screenshot.Save($"screenshot{scrnCnt}.png");
+                            screenshot.Save($"{saveDirectory}/screenshot{scrnCnt}.png");
                             MessageBox.Show($"Скриншот сохранён как screenshot{scrnCnt++}.png");
                         }
                     }
@@ -200,9 +206,9 @@ namespace Course
                           $"-vcodec libx264 " +
                           $" -crf {crf} " +
                           $"-preset ultrafast " + 
-                          $"capture{cptrCnt}.mp4";
+                          $"{saveDirectory}/capture{cptrCnt++}.mp4";
 
-            ffmpegProcess = new Process
+            ffmpegProcess = new Process 
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -214,8 +220,18 @@ namespace Course
                     CreateNoWindow = true
                 }
             };
-            ffmpegProcess.ErrorDataReceived += (s, e) => Debug.WriteLine(e.Data);
-            
+            ffmpegProcess.ErrorDataReceived += (s, e) =>
+            {
+                if (textBox3.InvokeRequired)
+                {
+                    textBox3.Invoke(new Action(() => textBox3.AppendText(e.Data + Environment.NewLine)));
+                }
+                else
+                {
+                    textBox3.AppendText(e.Data + Environment.NewLine);
+                }
+            };
+
             if (!ffmpegProcess.Start()) 
             {
                 MessageBox.Show("Произошла ошибка");
@@ -229,10 +245,8 @@ namespace Course
         {
             if (ffmpegProcess != null && !ffmpegProcess.HasExited)
             {
-                //ffmpegProcess.Kill();
                 ffmpegProcess.StandardInput.WriteLine("q");
-                ffmpegProcess.WaitForExit();
-                //ffmpegProcess.CloseMainWindow();
+                ffmpegProcess.CloseMainWindow();
                 ffmpegProcess.Dispose();
             }
         }
